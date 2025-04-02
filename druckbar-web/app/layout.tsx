@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import LegalModal from "@/components/LegalModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <main className="overflow-x-hidden">
           <div className="min-h-screen w-full flex flex-col snap-start">
             {children}
+            <LegalModal />
           </div>
         </main>
       </body>

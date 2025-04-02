@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FeaturedProducts from "@/components/FeaturedProducts";
 
 export default function HomePage() {
   return (
@@ -28,10 +29,10 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           className="text-center px-6"
         >
-          <h1 className="text-5xl font-bold mb-4 drop-shadow">
+          <h1 className="text-5xl font-bold mb-4 drop-shadow text-black">
             Willkommen bei DruckBar
           </h1>
-          <p className="max-w-xl mx-auto text-lg">
+          <p className="max-w-xl mx-auto text-lg text-black">
             Hochwertiger 3D-Druck, Laserschneiden & Reparaturen in Hof – lokal &
             nachhaltig.
           </p>
@@ -80,50 +81,37 @@ export default function HomePage() {
         </div>
       </section>
 
+      <FeaturedProducts />
+
       {/* About Section */}
       <section
         id="about"
-        className="min-h-screen bg-amber-50 py-24 px-6 text-center snap-start"
+        className="relative min-h-screen snap-start flex items-center justify-center text-white"
       >
+        {/* Background Image */}
+        <div className="absolute inset-0 -z-10">
+          <div
+            className="w-full h-full bg-cover bg-center"
+            style={{ backgroundImage: "url(/workshop_bg.png)" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        </div>
+
+        {/* Content */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="px-6 text-center max-w-3xl"
         >
-          <h2 className="text-4xl font-bold mb-8 text-gray-800">
-            Über DruckBar
-          </h2>
-          <p className="max-w-3xl mx-auto text-lg">
-            Wir sind eine lokale Initiative aus Hof, die sich auf moderne
-            Produktionstechnologien spezialisiert hat. Unsere Mission ist es,
-            nachhaltige Lösungen durch 3D-Druck, Reparaturservices und kreative
-            Fertigung anzubieten.
+          <h2 className="text-4xl font-bold mb-6">Über DruckBar</h2>
+          <p className="text-lg text-white/90">
+            Wir glauben daran, Dinge zu schaffen, zu reparieren und lokal neu zu
+            denken. In unserer Werkstatt in Hof entstehen Ideen, Prototypen und
+            Produkte – mit Leidenschaft, Präzision und Nachhaltigkeit.
           </p>
         </motion.div>
       </section>
-
-      {/* Contact Section
-      <section
-        id="contact"
-        className="min-h-screen bg-white py-24 px-6 text-center snap-start"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-4xl font-bold mb-8 text-gray-800">Kontakt</h2>
-          <p className="text-lg mb-6">
-            Du hast ein Projekt oder eine Frage? Schreib uns!
-          </p>
-          <a
-            href="mailto:info@druckbar.de"
-            className="inline-block px-6 py-3 text-white bg-amber-600 hover:bg-amber-700 rounded-full text-lg transition"
-          >
-            Jetzt Kontakt aufnehmen
-          </a>
-        </motion.div>
-      </section> */}
 
       <section
         id="contact"

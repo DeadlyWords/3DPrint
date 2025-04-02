@@ -1,7 +1,7 @@
+// components/Navbar.tsx
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -31,8 +31,8 @@ export default function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={clsx(
-          "fixed top-0 z-50 w-full px-6 py-4 flex justify-between items-center transition-all",
-          scrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+          "fixed top-0 z-50 w-full px-6 py-4 flex justify-between items-center transition-all backdrop-blur-md",
+          scrolled ? "bg-white/80 shadow-sm" : "bg-transparent"
         )}
       >
         {/* Text Logo */}
@@ -44,7 +44,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex space-x-8 font-medium text-gray-800 text-base">
+        <div className="hidden md:flex items-center space-x-6 text-base font-medium text-gray-800">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -54,9 +54,17 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Shop Button */}
+          <Link
+            href="/shop"
+            className="ml-4 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md font-semibold shadow"
+          >
+            Shop
+          </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Burger Button */}
         <div className="md:hidden ml-auto">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -68,7 +76,7 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Dropdown */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -89,6 +97,13 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href="/shop"
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md font-semibold shadow"
+                onClick={() => setMobileOpen(false)}
+              >
+                Shop
+              </Link>
             </div>
           </motion.div>
         )}
