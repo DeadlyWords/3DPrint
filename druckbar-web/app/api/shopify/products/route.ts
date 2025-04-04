@@ -41,7 +41,10 @@ export async function GET() {
       description: edge.node.description,
       images: edge.node.images.edges.map((img: any) => img.node),
     }))
-  
+        const duplicatedProducts = [...products]
+        while (duplicatedProducts.length < 6) {
+      duplicatedProducts.push(...products)
+    }
     return Response.json(products)
   }
   

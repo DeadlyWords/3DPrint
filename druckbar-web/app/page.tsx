@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import FeaturedProducts from "@/components/FeaturedProducts";
+import dynamic from 'next/dynamic'
+
+const Navbar = dynamic(() => import('@/components/Navbar'), { ssr: false })
+const FeaturedProducts = dynamic(() => import('@/components/FeaturedProducts'), { ssr: false })
 
 export default function HomePage() {
   return (

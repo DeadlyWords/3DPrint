@@ -1,32 +1,25 @@
-import { Inter } from "next/font/google";
-import "./globals.css";
-import LegalModal from "@/components/LegalModal";
+import './globals.css'
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { ShopProvider } from '@/context/ShopContext'
+import LegalModal from '@/components/LegalModal'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: "DruckBar - 3D-Druck & mehr in Hof",
-  description:
-    "Dein lokaler Partner für 3D-Druck, Lasergravur und Reparaturen in Hof, Bayern.",
-};
+export const metadata: Metadata = {
+  title: 'DruckBar',
+  description: '3D-Druck in Hof, nachhaltig & lokal',
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de">
-      <body
-        className={`${inter.className} antialiased bg-white text-gray-800 scroll-smooth snap-y snap-mandatory`}
-      >
-        <main className="overflow-x-hidden">
-          <div className="min-h-screen w-full flex flex-col snap-start">
-            {children}
-            <LegalModal />
-          </div>
-        </main>
+      <body className={inter.className}>
+        <ShopProvider>
+          {children}
+          <LegalModal />
+        </ShopProvider>
       </body>
     </html>
-  );
+  )
 }

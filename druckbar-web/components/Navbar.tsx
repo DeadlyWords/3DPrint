@@ -1,113 +1,112 @@
-// components/Navbar.tsx
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import clsx from "clsx";
+import Link from 'next/link'
+import { useState } from 'react'
+import { Menu, X } from 'lucide-react'
+import { useShop } from '@/context/ShopContext'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const { setMode } = useShop()
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const handleShopClick = () => {
+    const target = document.getElementById('products')
+    if (target) {
+      setMode('full')
+      target.scrollIntoView({ behavior: 'smooth' })
+      setMobileOpen(false)
+    }
+  }
 
-  const navLinks = [
-    { label: "Home", href: "#hero" },
-    { label: "Leistungen", href: "#services" },
-    { label: "Über uns", href: "#about" },
-    { label: "Kontakt", href: "#contact" },
-  ];
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+      setMobileOpen(false)
+    }
+  }
 
   return (
-    <>
-      <motion.nav
-        initial={{ y: -60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className={clsx(
-          "fixed top-0 z-50 w-full px-6 py-4 flex justify-between items-center transition-all backdrop-blur-md",
-          scrolled ? "bg-white/80 shadow-sm" : "bg-transparent"
-        )}
-      >
-        {/* Text Logo */}
-        <Link
-          href="/"
-          className="text-xl md:text-2xl font-bold tracking-tight text-gray-900"
-        >
+    <nav className="fixed top-0 z-50 w-full bg-white/80 backdrop-blur-md shadow-sm px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <Link href="/" className="text-xl font-bold tracking-tight text-gray-900">
           DruckBar
         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center space-x-6 text-base font-medium text-gray-800">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-amber-600 transition-colors duration-200"
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          {/* Shop Button */}
-          <Link
-            href="/shop"
+          <button onClick={() => scrollTo('services')} className="hover:text-amber-600 transition">
+            Leistungen
+          </button>
+          <button onClick={() => scrollTo('about')} className="hover:text-amber-600 transition">
+            Über uns
+          </button>
+          <button onClick={() => scrollTo('contact')} className="hover:text-amber-600 transition">
+            Kontakt
+          </button>
+          <button
+            onClick={handleShopClick}
             className="ml-4 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md font-semibold shadow"
           >
             Shop
-          </Link>
+          </button>
         </div>
 
-        {/* Mobile Burger Button */}
-        <div className="md:hidden ml-auto">
+        {/* Mobile Burger */}
+        <div className="md:hidden">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle mobile menu"
             className="text-gray-800"
+            aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
-      </motion.nav>
+      </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="fixed top-16 left-0 w-full bg-white z-40 shadow-md md:hidden"
-          >
-            <div className="flex flex-col items-center gap-6 py-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-gray-800 hover:text-amber-600 font-medium text-lg"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Link
-                href="/shop"
-                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md font-semibold shadow"
-                onClick={() => setMobileOpen(false)}
+          <>
+            {/* Semi-transparent background */}
+            <motion.div
+              key="overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black z-40"
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Slide-down menu */}
+            <motion.div
+              key="menu"
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -10, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute z-50 top-full left-0 w-full bg-white shadow-md rounded-b-md py-6 px-4 space-y-4 text-center text-base font-medium text-gray-800"
+            >
+              <button onClick={() => scrollTo('services')} className="block w-full hover:text-amber-600">
+                Leistungen
+              </button>
+              <button onClick={() => scrollTo('about')} className="block w-full hover:text-amber-600">
+                Über uns
+              </button>
+              <button onClick={() => scrollTo('contact')} className="block w-full hover:text-amber-600">
+                Kontakt
+              </button>
+              <button
+                onClick={handleShopClick}
+                className="w-full mt-2 bg-amber-600 hover:bg-amber-700 text-white py-2 rounded-md shadow"
               >
                 Shop
-              </Link>
-            </div>
-          </motion.div>
+              </button>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </>
-  );
+    </nav>
+  )
 }
