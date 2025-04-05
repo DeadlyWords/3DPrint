@@ -10,6 +10,7 @@ const FeaturedProducts = dynamic(
   () => import("@/components/FeaturedProducts"),
   { ssr: false }
 );
+import ServicesCarousel from "@/components/Services";
 
 export default function HomePage() {
   return (
@@ -44,47 +45,7 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Services Section */}
-      <section
-        id="services"
-        className="min-h-screen bg-white py-24 px-6 text-center snap-start"
-      >
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl font-bold mb-8 text-gray-800"
-        >
-          Unsere Leistungen
-        </motion.h2>
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-12 text-left">
-          {[
-            {
-              title: "3D-Druck",
-              desc: "FDM & Resin Druck mit der BambuLab H2D – präzise, schnell und zuverlässig.",
-            },
-            {
-              title: "Lasergravur & Schnitt",
-              desc: "Perfekt für Holz, Acryl & mehr – personalisierte Gravuren & präzise Schnitte.",
-            },
-            {
-              title: "Reparatur & Nachhaltigkeit",
-              desc: "Lokale Hilfe zur Reparatur defekter Alltagsgegenstände – statt wegwerfen.",
-            },
-          ].map((item, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="bg-amber-50 p-6 rounded-lg shadow-sm"
-            >
-              <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-              <p>{item.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      <ServicesCarousel />
 
       <FeaturedProducts />
 
