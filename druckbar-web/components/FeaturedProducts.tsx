@@ -4,15 +4,19 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Carousel from "@/components/Carousel";
 import Link from "next/link";
+import Image from "next/image";
 import { useShop } from "@/context/ShopContext";
 
-type Product = {
+interface Product {
   id: string;
   title: string;
-  description: string;
   handle: string;
-  images: { url: string; altText: string | null }[];
-};
+  description: string;
+  images: {
+    url: string;
+    altText: string | null;
+  }[];
+}
 
 export default function FeaturedProducts() {
   const { mode: shopMode, setMode: setShopMode } = useShop();
@@ -62,11 +66,12 @@ export default function FeaturedProducts() {
                 key={`${product.id}-${index}`}
                 className="bg-white rounded-lg shadow-md p-4 flex flex-col"
               >
-                <div className="aspect-[4/3] bg-gray-100 rounded-md mb-4 overflow-hidden">
-                  <img
+                <div className="aspect-[4/3] bg-gray-100 rounded-md mb-4 overflow-hidden relative">
+                  <Image
                     src={product.images[0]?.url || ""}
                     alt={product.images[0]?.altText || product.title}
-                    className="object-cover w-full h-full"
+                    fill
+                    className="object-cover rounded-md"
                   />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
@@ -97,11 +102,12 @@ export default function FeaturedProducts() {
       bgColor="amber-50"
       renderItem={(product) => (
         <div className="bg-white rounded-lg shadow-md p-4 flex flex-col h-full">
-          <div className="aspect-[4/3] bg-gray-100 rounded-md mb-4 overflow-hidden">
-            <img
+          <div className="aspect-[4/3] bg-gray-100 rounded-md mb-4 overflow-hidden relative">
+            <Image
               src={product.images[0]?.url || ""}
               alt={product.images[0]?.altText || product.title}
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover rounded-md"
             />
           </div>
           <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
