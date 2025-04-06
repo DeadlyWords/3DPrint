@@ -1,35 +1,5 @@
 // app/api/shopify/products/route.ts
-
-interface ShopifyProduct {
-  id: string
-  title: string
-  handle: string
-  description: string
-  images: { url: string; altText: string | null }[]
-}
-
-interface ShopifyGraphQLResponse {
-  data: {
-    products: {
-      edges: {
-        node: {
-          id: string
-          title: string
-          handle: string
-          description: string
-          images: {
-            edges: {
-              node: {
-                url: string
-                altText: string | null
-              }
-            }[]
-          }
-        }
-      }[]
-    }
-  }
-}
+import { Product } from '@/types/product'
 
 export async function GET() {
   console.log('✅ Shopify API route hit')
@@ -51,6 +21,18 @@ export async function GET() {
                 }
               }
             }
+            variants(first: 1) {
+              edges {
+                node {
+                  id
+                  title
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -66,14 +48,29 @@ export async function GET() {
     body: JSON.stringify({ query }),
   })
 
-  const json: ShopifyGraphQLResponse = await res.json()
+  const json = await res.json()
 
-  const products: ShopifyProduct[] = json.data.products.edges.map((edge) => ({
+  const products: Product[] = json.data.products.edges.map((edge: any) => ({
     id: edge.node.id,
     title: edge.node.title,
     handle: edge.node.handle,
     description: edge.node.description,
-    images: edge.node.images.edges.map((img) => img.node),
+    images: edge.node.images.edges.map((img: any) => ({
+      url: img.node.url,
+      altText: img.node.altText,
+    })),
+    variants: edge.node.variants.edges.map((variant: any) => ({
+      id: variant.node.id,
+      title: variant.node.title,
+      price: {
+        amount: variant.node.price.amount,
+        currencyCode: variant.node.price.currencyCode,
+      },
+    })),
+    price: {
+      amount: edge.node.variants.edges[0]?.node.price.amount ?? '',
+      currencyCode: edge.node.variants.edges[0]?.node.price.currencyCode ?? 'EUR',
+    },
   }))
 
   return Response.json(products)

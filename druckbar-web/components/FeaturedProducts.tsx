@@ -6,17 +6,7 @@ import Carousel from "@/components/Carousel";
 import Link from "next/link";
 import Image from "next/image";
 import { useShop } from "@/context/ShopContext";
-
-interface Product {
-  id: string;
-  title: string;
-  handle: string;
-  description: string;
-  images: {
-    url: string;
-    altText: string | null;
-  }[];
-}
+import { Product } from "@/types/product";
 
 export default function FeaturedProducts() {
   const { mode: shopMode, setMode: setShopMode } = useShop();
