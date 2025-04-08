@@ -1,8 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ShopProvider } from "@/context/ShopContext";
 import LegalModal from "@/components/LegalModal";
+import { ShopifyProvider } from '@shopify/hydrogen-react'
+import ShopifyClientProvider from "@/components/ShopifyClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={inter.className}>
-        <ShopProvider>
+      <ShopifyClientProvider>
           {children}
+          </ShopifyClientProvider>
           <LegalModal />
-        </ShopProvider>
       </body>
     </html>
   );

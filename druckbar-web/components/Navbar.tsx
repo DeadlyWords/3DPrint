@@ -3,17 +3,15 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
-import { useShop } from '@/context/ShopContext'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { setMode } = useShop()
 
   const handleShopClick = () => {
     const target = document.getElementById('products')
     if (target) {
-      setMode('full')
+
       target.scrollIntoView({ behavior: 'smooth' })
       setMobileOpen(false)
     }
