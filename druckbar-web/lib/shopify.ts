@@ -35,7 +35,7 @@ export async function fetchProducts() {
       }
     `
   
-    const res = await fetch(`https://${domain}/api/2023-10/graphql.json`, {
+    const res = await fetch(`https://${domain}/api/2025-01/graphql.json`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

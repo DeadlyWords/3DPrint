@@ -1,18 +1,21 @@
-// components/ShopifyClientProvider.tsx
 'use client'
 
 import { ShopifyProvider } from '@shopify/hydrogen-react'
 
 export default function ShopifyClientProvider({
   children,
+  storeDomain,
+  storefrontToken
 }: {
   children: React.ReactNode
+  storeDomain: string
+  storefrontToken: string
 }) {
   return (
     <ShopifyProvider
-      storeDomain="hnadba-i0.myshopify.com"
-      storefrontToken="1130940d7ee549ef027511569592b9cb"
-      storefrontApiVersion="2023-10"
+      storeDomain={storeDomain}
+      storefrontToken={storefrontToken}
+      storefrontApiVersion="2025-01"
       countryIsoCode="DE"
       languageIsoCode="DE"
     >

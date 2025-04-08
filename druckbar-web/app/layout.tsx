@@ -5,6 +5,7 @@ import LegalModal from "@/components/LegalModal";
 import { ShopifyProvider } from '@shopify/hydrogen-react'
 import ShopifyClientProvider from "@/components/ShopifyClientProvider";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,9 +21,12 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={inter.className}>
-      <ShopifyClientProvider>
+      <ShopifyClientProvider
+          storeDomain={process.env.SHOPIFY_STORE_DOMAIN!}
+          storefrontToken={process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!}
+        >
           {children}
-          </ShopifyClientProvider>
+        </ShopifyClientProvider>
           <LegalModal />
       </body>
     </html>
