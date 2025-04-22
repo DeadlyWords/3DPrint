@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import Carousel from '@/components/Carousel'
-import useShopifyQuery from '@/hooks/useShopifyQuery'
-import type { Product } from '@/types/product'
-import Link from 'next/link'
-import Image from 'next/image'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import Carousel from "@/components/Carousel";
+import useShopifyQuery from "@/hooks/useShopifyQuery";
+import type { Product } from "@/types/product";
+import Link from "next/link";
+import Image from "next/image";
 
 const QUERY = `
   query FeaturedProducts {
@@ -29,43 +29,67 @@ const QUERY = `
       }
     }
   }
-`
+`;
 
 export default function FeaturedProducts() {
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAll] = useState(false);
 
-  const { data: products, loading, error } = useShopifyQuery<Product[]>({
+  const {
+    data: products,
+    loading,
+    error,
+  } = useShopifyQuery<Product[]>({
     query: QUERY,
-    parseResult: (data) =>
-      data.products.edges.map((edge: any) => ({
+    parseResult: (data: { products: { edges: { node: any }[] } }): Product[] =>
+      data.products.edges.map((edge) => ({
         id: edge.node.id,
         title: edge.node.title,
         handle: edge.node.handle,
         description: edge.node.description,
-        images: edge.node.images.edges.map((img: any) => ({
-          url: img.node.url,
-          altText: img.node.altText,
-        })),
+        images: edge.node.images.edges.map(
+          (img: { node: { url: string; altText: string | null } }) => ({
+            url: img.node.url,
+            altText: img.node.altText,
+          })
+        ),
       })),
-  })
+  });
 
-  if (loading || error || !products) return null
+  // Debug log to verify product data
+  console.log("FeaturedProducts - products:", products);
 
-  const featured = products.slice(0, 6)
-  const rest = products.slice(6)
+  if (loading)
+    return (
+      <div className="p-12 text-center text-gray-500">Lade Produkte...</div>
+    );
+  if (error)
+    return <div className="p-12 text-center text-red-500">Fehler: {error}</div>;
+  if (!products || products.length === 0)
+    return (
+      <div className="p-12 text-center text-gray-500">
+        Keine Produkte gefunden.
+      </div>
+    );
+
+  const featured = products.slice(0, 5);
+  const rest = products.slice(5);
 
   return (
-    <section id="products" className="bg-amber-50 py-24 px-6 text-center snap-start">
+    <section
+      id="products"
+      className="bg-amber-50 py-24 px-6 text-center snap-start"
+    >
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="max-w-6xl mx-auto relative"
       >
-        <h2 className="text-4xl font-bold text-gray-800 mb-10">Unsere Highlights</h2>
+        <h2 className="text-4xl font-bold text-gray-800 mb-10">
+          Unsere Highlights
+        </h2>
 
         <Carousel
-          
           id="featured-products"
           items={featured}
           itemKey={(item) => item.id}
@@ -74,14 +98,16 @@ export default function FeaturedProducts() {
             <div className="bg-white rounded-lg shadow-md p-4 flex flex-col h-full">
               <div className="aspect-[4/3] bg-gray-100 rounded-md mb-4 overflow-hidden relative">
                 <Image
-                  src={product.images[0]?.url || ''}
+                  src={product.images[0]?.url || ""}
                   alt={product.images[0]?.altText || product.title}
                   fill
                   className="object-cover rounded-md"
                 />
               </div>
               <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
-              <p className="text-gray-600 text-sm mb-4">{product.description}</p>
+              <p className="text-gray-600 text-sm mb-4">
+                {product.description}
+              </p>
               <Link
                 href={`https://hnadba-i0.myshopify.com/products/${product.handle}`}
                 target="_blank"
@@ -103,14 +129,16 @@ export default function FeaturedProducts() {
               >
                 <div className="aspect-[4/3] bg-gray-100 rounded-md mb-4 overflow-hidden relative">
                   <Image
-                    src={product.images[0]?.url || ''}
+                    src={product.images[0]?.url || ""}
                     alt={product.images[0]?.altText || product.title}
                     fill
                     className="object-cover rounded-md"
                   />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
-                <p className="text-gray-600 text-sm mb-4">{product.description}</p>
+                <p className="text-gray-600 text-sm mb-4">
+                  {product.description}
+                </p>
                 <Link
                   href={`https://hnadba-i0.myshopify.com/products/${product.handle}`}
                   target="_blank"
@@ -125,16 +153,16 @@ export default function FeaturedProducts() {
 
         {/* Toggle button */}
         {rest.length > 0 && (
-  <div className={`mt-10 ${showAll ? 'pt-16' : ''} text-center`}>
-    <button
-      onClick={() => setShowAll(!showAll)}
-      className="text-sm font-medium text-gray-600 hover:text-gray-800 underline transition"
-    >
-      {showAll ? 'Weniger anzeigen' : 'Mehr anzeigen →'}
-    </button>
-  </div>
-)}
+          <div className={`mt-10 text-center ${showAll ? "pt-16" : ""}`}>
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="text-sm font-medium text-gray-600 hover:text-gray-800 underline transition"
+            >
+              {showAll ? "Weniger anzeigen" : "Mehr anzeigen →"}
+            </button>
+          </div>
+        )}
       </motion.div>
     </section>
-  )
+  );
 }

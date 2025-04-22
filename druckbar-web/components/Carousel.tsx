@@ -1,11 +1,10 @@
-// components/Carousel.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 type CarouselProps<T> = {
-  items: T[];
+  items: T[]; // ideally always defined
   renderItem: (item: T, index: number) => React.ReactNode;
   itemKey: (item: T, index: number) => string | number;
   id?: string;
@@ -21,6 +20,9 @@ export default function Carousel<T>({
   title,
   bgColor = "white",
 }: CarouselProps<T>) {
+  // Use safeItems to avoid errors if items is undefined.
+  const safeItems = items || [];
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
   const touchStartX = useRef(0);
@@ -44,7 +46,7 @@ export default function Carousel<T>({
 
   const nextSlide = () => {
     setCurrentIndex((prev) =>
-      prev >= items.length - itemsPerView ? prev : prev + 1
+      prev >= safeItems.length - itemsPerView ? prev : prev + 1
     );
   };
 
@@ -77,15 +79,14 @@ export default function Carousel<T>({
         {title && (
           <h2 className="text-4xl font-bold text-gray-800 mb-10">{title}</h2>
         )}
-
         <div
           className="relative overflow-hidden"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white via-white/80 to-transparent pointer-events-none z-10" />
-          <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none z-10" />
+          <div className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-amber via-amber/80 to-transparent pointer-events-none z-10" />
+          <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-amber via-amber/80 to-transparent pointer-events-none z-10" />
 
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -93,7 +94,7 @@ export default function Carousel<T>({
               transform: `translateX(-${(100 / itemsPerView) * currentIndex}%)`,
             }}
           >
-            {items.map((item, index) => (
+            {safeItems.map((item, index) => (
               <div
                 key={itemKey(item, index)}
                 className="w-full sm:w-1/2 lg:w-1/3 px-4 flex-shrink-0"
@@ -112,7 +113,7 @@ export default function Carousel<T>({
               ‹
             </button>
           )}
-          {currentIndex < items.length - itemsPerView && (
+          {currentIndex < safeItems.length - itemsPerView && (
             <button
               onClick={nextSlide}
               className="absolute right-0 top-1/2 transform -translate-y-1/2 text-3xl px-4 py-2 rounded-e-full text-gray-400 hover:text-gray-600 z-20"
@@ -121,6 +122,19 @@ export default function Carousel<T>({
               ›
             </button>
           )}
+        </div>
+        {/* Dot indicators – highlight every item that’s in view */}
+        <div className="mt-4 flex justify-center space-x-2">
+          {safeItems.map((_, idx) => (
+            <div
+              key={idx}
+              className={`h-2 w-2 rounded-full transition-colors ${
+                idx >= currentIndex && idx < currentIndex + itemsPerView
+                  ? "bg-amber-600"
+                  : "bg-gray-300"
+              }`}
+            ></div>
+          ))}
         </div>
       </motion.div>
     </section>
